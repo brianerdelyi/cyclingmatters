@@ -678,3 +678,33 @@ button:hover {
   }
   .nav-dropdown-menu a { padding: 10px 12px; }
 }
+
+/* ===== Blog post images ===== */
+.post-body img.post-inline-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin: 8px 0 28px;
+}
+
+.post-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 8px 0 24px;
+}
+
+.post-gallery a { display: block; }
+
+.post-gallery img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+@media (max-width: 640px) {
+  .post-gallery { grid-template-columns: 1fr; }
+}
