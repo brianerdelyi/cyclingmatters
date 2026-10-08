@@ -7,6 +7,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FES2DCQ178"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FES2DCQ178');
+</script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -44,7 +52,7 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
     opacity: 0.03;
     pointer-events: none;
-    z-index: 1000;
+    z-index: 50;
   }
 
   /* ── NAV ── */
@@ -78,6 +86,21 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
   }
+
+  .nav-launch {
+    background: var(--orange);
+    color: var(--black);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    padding: 0.45rem 1.4rem;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    transition: opacity 0.15s, transform 0.15s;
+  }
+  .nav-launch:hover { opacity: 0.9; transform: translateY(-1px); }
 
   /* ── HERO ── */
   .hero {
@@ -672,7 +695,7 @@
     inset: 0;
     background: rgba(0,0,0,0.88);
     backdrop-filter: blur(8px);
-    z-index: 500;
+    z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -784,20 +807,46 @@
   .form-group textarea:focus { border-color: var(--orange); }
   .form-group textarea { resize: vertical; min-height: 80px; }
 
+  .consent-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    margin: 0.8rem 0 1rem;
+  }
+  .consent-row input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    accent-color: var(--orange);
+    cursor: pointer;
+  }
+  .consent-label {
+    font-size: 0.75rem;
+    color: #666;
+    line-height: 1.5;
+    cursor: pointer;
+  }
+
   .btn-submit {
     width: 100%;
-    background: var(--orange);
-    color: var(--black);
+    background: #333;
+    color: #666;
     font-family: var(--font-display);
     font-size: 1.3rem;
     letter-spacing: 0.08em;
     padding: 0.9rem;
     border: none;
-    cursor: pointer;
-    transition: opacity 0.15s, transform 0.15s;
+    cursor: not-allowed;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
     margin-top: 0.5rem;
   }
-  .btn-submit:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-submit.enabled {
+    background: var(--orange);
+    color: var(--black);
+    cursor: pointer;
+  }
+  .btn-submit.enabled:hover { opacity: 0.9; transform: translateY(-1px); }
 
   .popup-success {
     text-align: center;
@@ -1237,13 +1286,13 @@
 <!-- NAV -->
 <nav>
   <div class="nav-logo">Cycle<span>Report</span></div>
-  <div class="nav-tag">By Cycling Matters</div>
+  <button class="nav-launch" onclick="trackAndLaunch('nav')">Launch</button>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-left">
-    <div class="hero-eyebrow">Toronto's trusted third party for cycling safety</div>
+    <div class="hero-eyebrow">Trusted for cycling safety</div>
     <h1>
       Your incident.
       <span class="accent">Their silence.</span>
@@ -1254,7 +1303,7 @@
       Most never report it. <strong>Not because they don't care —
       but because the system makes it pointless.</strong>
       CycleReport is the independent, trusted third party that changes that —
-      for cyclists, for local police services, and for the City.
+      for cyclists, police, City and anyone else interested.
     </p>
     <div class="hero-cta">
       <button class="btn-launch" onclick="trackAndLaunch('hero')">Launch CycleReport</button>
@@ -1672,7 +1721,6 @@
     <div class="compare-col">
       <div class="compare-col-header">
         <div class="compare-logo cr">CycleReport</div>
-        <div class="compare-tag better">Toronto's trusted third party</div>
       </div>
       <div class="compare-item">
         <div class="compare-check check-yes">✓</div>
@@ -1706,35 +1754,34 @@
     <div class="compare-col">
       <div class="compare-col-header">
         <div class="compare-logo tps">Police Online Reporting</div>
-        <div class="compare-tag worse">e.g. tps.ca/services/online-reporting</div>
       </div>
       <div class="compare-item">
         <div class="compare-check check-no">✗</div>
-        <div class="compare-text">Designed for collisions, not the full picture — most police reporting forms have no structured category for near-misses, harassment, dangerous passes, or doorings that don't result in injury</div>
+        <div class="compare-text">Often designed for collisions — many police reporting forms may have no structured category for near-misses, harassment, dangerous passes, or doorings that don't result in injury</div>
       </div>
       <div class="compare-item">
         <div class="compare-check check-no">✗</div>
-        <div class="compare-text">Submit and receive silence — a case number is the last communication you'll get</div>
+        <div class="compare-text">Follow-up may be limited — in many cases a case number is the only confirmation you'll receive after submitting</div>
       </div>
       <div class="compare-item">
         <div class="compare-check check-no">✗</div>
-        <div class="compare-text">Inconsistent follow-up — some cyclists receive updates, many hear nothing after their initial case number. There is no guaranteed status tracking or outcome notification</div>
+        <div class="compare-text">Status tracking varies — some cyclists receive updates, many hear nothing. Guaranteed status tracking and outcome notification is not always available</div>
       </div>
       <div class="compare-item">
         <div class="compare-check check-no">✗</div>
-        <div class="compare-text">No public transparency — reports are not published or anonymized for public benefit. The data disappears into the system</div>
+        <div class="compare-text">Public transparency may be limited — reports are not always published or anonymized for public benefit</div>
       </div>
       <div class="compare-item">
         <div class="compare-check check-no">✗</div>
-        <div class="compare-text">No outcome notification — you will never be told what happened as a result of your report</div>
+        <div class="compare-text">Outcome notification may not be provided — cyclists may not be informed of what happened as a result of their report</div>
       </div>
       <div class="compare-item">
         <div class="compare-check check-no">✗</div>
-        <div class="compare-text">No public data — police services rarely publish how many cycling complaints are received or what happens to them</div>
+        <div class="compare-text">Aggregate data is rarely public — police services don't always publish how many cycling complaints are received or how they are resolved</div>
       </div>
       <div class="compare-item">
         <div class="compare-check check-no">✗</div>
-        <div class="compare-text">Each report is isolated — no mechanism to detect patterns across incidents or flag repeat offenders</div>
+        <div class="compare-text">Reports may be isolated — without cross-referencing across submissions, patterns such as repeat offenders or dangerous intersections can go undetected</div>
       </div>
     </div>
   </div>
@@ -1795,7 +1842,7 @@
     <div class="why-card">
       <div class="why-number">06</div>
       <div class="why-title">You'll hear back</div>
-      <div class="why-text">This shouldn't be radical: every report gets a response. <strong>Instant acknowledgement.</strong> Light moderation to keep the data accurate and credible. Status updates at every stage. A feedback loop that currently doesn't exist anywhere else in Toronto.</div>
+      <div class="why-text">This shouldn't be radical: every report gets a response. <strong>Instant acknowledgement.</strong> A quality review process ensures the data stays accurate and credible. Status updates at every stage. A feedback loop that most cyclists have never experienced from a reporting platform.</div>
     </div>
   </div>
 
@@ -1882,7 +1929,11 @@
         <label>What would make CycleReport essential for you? (optional)</label>
         <textarea id="f-message" placeholder="A feature you'd love, a gap you've noticed, or a recent incident that went nowhere…"></textarea>
       </div>
-      <button class="btn-submit" onclick="submitForm()">Request Early Access →</button>
+      <div class="consent-row">
+        <input type="checkbox" id="f-consent" onchange="toggleSubmit()">
+        <label for="f-consent" class="consent-label">I agree to be contacted by email about CycleReport. I can unsubscribe at any time.</label>
+      </div>
+      <button class="btn-submit" id="submit-btn" onclick="submitForm()" disabled>Request Early Access →</button>
     </div>
 
     <div class="popup-success" id="form-success">
@@ -1931,6 +1982,11 @@
   // ── LAUNCH BUTTON ──
   function trackAndLaunch(source) {
     analytics.track('launch_click', { source });
+    // Fire GA4 event
+    gtag('event', 'launch_click', {
+      event_category: 'engagement',
+      event_label: source
+    });
     openPopup();
   }
 
@@ -1938,6 +1994,13 @@
   function openPopup() {
     document.getElementById('popup').classList.add('active');
     document.body.style.overflow = 'hidden';
+    // Reset form to initial state
+    document.getElementById('f-consent').checked = false;
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.classList.remove('enabled');
+    btn.textContent = 'Request Early Access →';
+    btn.style.background = '';
     analytics.track('popup_open');
   }
 
@@ -1955,8 +2018,19 @@
     if (e.key === 'Escape') closePopup();
   });
 
+  // ── CONSENT TOGGLE ──
+  function toggleSubmit() {
+    const btn = document.getElementById('submit-btn');
+    const checked = document.getElementById('f-consent').checked;
+    btn.disabled = !checked;
+    btn.classList.toggle('enabled', checked);
+  }
+
   // ── FORM SUBMIT ──
   async function submitForm() {
+    const btn = document.getElementById('submit-btn');
+    if (!btn.classList.contains('enabled')) return;
+
     const name    = document.getElementById('f-name').value.trim();
     const email   = document.getElementById('f-email').value.trim();
     const message = document.getElementById('f-message').value.trim();
@@ -1967,9 +2041,9 @@
       return;
     }
 
-    const btn = document.querySelector('.btn-submit');
     btn.textContent = 'Sending…';
     btn.disabled = true;
+    btn.classList.remove('enabled');
 
     try {
       const res = await fetch('https://formspree.io/f/mojbbwoy', {
@@ -1978,25 +2052,32 @@
         body: JSON.stringify({ name, email, message })
       });
 
-      if (!res.ok) throw new Error('Formspree error');
+      const data = await res.json();
+      console.log('Formspree response:', res.status, data);
+
+      if (!res.ok) throw new Error(`Formspree error: ${res.status} — ${JSON.stringify(data)}`);
 
       analytics.track('form_submit', {
         has_name: !!name,
         has_message: !!message,
         email_domain: email.split('@')[1]
       });
+      // Fire GA4 event
+      gtag('event', 'early_access_signup', {
+        event_category: 'conversion',
+        has_message: !!message
+      });
 
       document.getElementById('contact-form').style.display = 'none';
       document.getElementById('form-success').style.display = 'block';
 
     } catch (err) {
-      btn.textContent = 'Request Early Access →';
-      btn.disabled = false;
-      btn.style.background = '#cc2200';
       btn.textContent = 'Something went wrong — try again';
+      btn.disabled = false;
+      btn.classList.add('enabled');
+      btn.style.background = '#cc2200';
       console.error('Formspree error:', err);
     }
-  }
   }
 
   // ── SCROLL REVEAL ──
