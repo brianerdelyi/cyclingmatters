@@ -689,22 +689,28 @@ button:hover {
 }
 
 .post-gallery {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  columns: 2;
+  column-gap: 12px;
   margin: 8px 0 24px;
 }
 
-.post-gallery a { display: block; }
+.post-gallery a {
+  display: block;
+  break-inside: avoid;
+  margin: 0 0 12px;
+}
 
+/* first photo spans the full width */
+.post-gallery a:first-child { column-span: all; }
+
+/* show every photo uncropped, at its natural proportions */
 .post-gallery img {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+  height: auto;
   border-radius: 12px;
 }
 
 @media (max-width: 640px) {
-  .post-gallery { grid-template-columns: 1fr; }
+  .post-gallery { columns: 1; }
 }
