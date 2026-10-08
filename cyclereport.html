@@ -1,0 +1,2016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CycleReport — Toronto Cyclists Deserve Better</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --orange: #FF4E00;
+    --orange-dim: #cc3e00;
+    --black: #0a0a0a;
+    --white: #f5f2ed;
+    --gray: #1a1a1a;
+    --gray-mid: #2e2e2e;
+    --gray-light: #888;
+    --green: #00e676;
+    --red: #ff1744;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 2.5rem;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,78,0,0.15);
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    letter-spacing: 0.05em;
+    color: var(--white);
+  }
+  .nav-logo span { color: var(--orange); }
+
+  .nav-tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--orange);
+    border: 1px solid var(--orange);
+    padding: 0.25rem 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 7rem 2.5rem 4rem;
+    gap: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(255,78,0,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-left { position: relative; z-index: 2; }
+
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--orange);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2rem;
+    height: 1px;
+    background: var(--orange);
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 8vw, 7rem);
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  h1 .accent { color: var(--orange); display: block; }
+
+  .hero-body {
+    font-size: 1.1rem;
+    color: #bbb;
+    max-width: 480px;
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .hero-body strong { color: var(--white); font-weight: 500; }
+
+  .hero-cta {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-launch {
+    background: var(--orange);
+    color: var(--black);
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    letter-spacing: 0.08em;
+    padding: 0.9rem 2.4rem;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s, box-shadow 0.15s;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+  .btn-launch::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.15);
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+  .btn-launch:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,78,0,0.4); }
+  .btn-launch:hover::after { transform: translateX(0); }
+  .btn-launch:active { transform: translateY(0); }
+
+  .hero-note {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--gray-light);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── PHONE MOCKUP ── */
+  .hero-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .phone-wrap {
+    position: relative;
+    animation: float 4s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+  }
+
+  .phone {
+    width: 280px;
+    height: 580px;
+    background: #111;
+    border-radius: 44px;
+    border: 2px solid #333;
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px #222,
+      0 40px 80px rgba(0,0,0,0.8),
+      0 0 60px rgba(255,78,0,0.08);
+  }
+
+  /* Dynamic island */
+  .phone-island {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 30px;
+    background: #000;
+    border-radius: 20px;
+    z-index: 10;
+  }
+
+  .phone-screen {
+    position: absolute;
+    inset: 0;
+    background: #0f0f0f;
+    overflow: hidden;
+  }
+
+  /* App status bar */
+  .app-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 56px 18px 10px;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: #666;
+  }
+
+  /* App header */
+  .app-header {
+    padding: 0 18px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #1e1e1e;
+  }
+  .app-header-title {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    letter-spacing: 0.05em;
+    color: #f0ede8;
+  }
+  .app-header-title span { color: var(--orange); }
+  .app-badge {
+    background: rgba(255,78,0,0.15);
+    color: var(--orange);
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    padding: 3px 7px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,78,0,0.3);
+  }
+
+  /* Capture button */
+  .app-capture-btn {
+    margin: 16px 18px;
+    background: var(--orange);
+    color: #000;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+
+  /* Recent reports list */
+  .app-section-label {
+    padding: 0 18px 8px;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: #555;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .app-report {
+    margin: 0 12px 8px;
+    background: #191919;
+    border-radius: 10px;
+    padding: 10px 12px;
+    border-left: 3px solid var(--orange);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .app-report-icon {
+    width: 28px;
+    height: 28px;
+    background: rgba(255,78,0,0.12);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .app-report-type {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--orange);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .app-report-detail {
+    font-size: 0.65rem;
+    color: #aaa;
+    line-height: 1.4;
+  }
+  .app-report-meta {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    color: #555;
+    margin-top: 4px;
+  }
+
+  .app-report.submitted { border-left-color: var(--green); }
+  .app-report.submitted .app-report-icon { background: rgba(0,230,118,0.1); }
+  .app-report.submitted .app-report-type { color: var(--green); }
+
+  /* Status bar at bottom of phone */
+  .app-bottom-nav {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    background: #111;
+    border-top: 1px solid #222;
+    padding: 12px 0 24px;
+    display: flex;
+    justify-content: space-around;
+  }
+  .app-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+  }
+  .app-nav-dot {
+    width: 22px;
+    height: 22px;
+    background: #222;
+    border-radius: 6px;
+  }
+  .app-nav-dot.active { background: var(--orange); }
+  .app-nav-label {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    color: #555;
+  }
+  .app-nav-label.active { color: var(--orange); }
+
+  /* Glow behind phone */
+  .phone-glow {
+    position: absolute;
+    bottom: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
+    height: 80px;
+    background: rgba(255,78,0,0.2);
+    filter: blur(40px);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0 2.5rem;
+    margin: 0 0 5rem;
+  }
+  .divider-line { flex: 1; height: 1px; background: #1e1e1e; }
+  .divider-text {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: #444;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ── COMPARISON SECTION ── */
+  .compare {
+    padding: 0 2.5rem 6rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--orange);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1;
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+  }
+  .section-title em {
+    font-style: normal;
+    color: var(--orange);
+  }
+
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: #1a1a1a;
+    border: 1px solid #1a1a1a;
+  }
+
+  .compare-col {
+    background: var(--black);
+    padding: 2rem;
+  }
+
+  .compare-col-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1.8rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid #1e1e1e;
+  }
+
+  .compare-logo {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+  }
+  .compare-logo.cr { color: var(--orange); }
+  .compare-logo.tps { color: #555; }
+
+  .compare-tag {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    padding: 3px 8px;
+    letter-spacing: 0.1em;
+  }
+  .compare-tag.better { background: rgba(255,78,0,0.15); color: var(--orange); border: 1px solid rgba(255,78,0,0.3); }
+  .compare-tag.worse { background: rgba(136,136,136,0.1); color: #555; border: 1px solid #2a2a2a; }
+
+  .compare-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    margin-bottom: 1.2rem;
+  }
+  .compare-check {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+  }
+  .check-yes { background: rgba(255,78,0,0.15); color: var(--orange); border: 1px solid rgba(255,78,0,0.4); }
+  .check-no { background: rgba(136,136,136,0.08); color: #444; border: 1px solid #2a2a2a; }
+
+  .compare-text { font-size: 0.9rem; color: #aaa; line-height: 1.5; }
+  .compare-text strong { color: var(--white); font-weight: 500; }
+
+  /* ── WHY SECTION ── */
+  .why {
+    padding: 0 2.5rem 6rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    background: #1a1a1a;
+    border: 1px solid #1a1a1a;
+    margin-top: 3rem;
+  }
+
+  .why-card {
+    background: var(--black);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.2s;
+  }
+  .why-card:hover { background: #0f0f0f; }
+  .why-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 0;
+    background: var(--orange);
+    transition: height 0.3s;
+  }
+  .why-card:hover::before { height: 100%; }
+
+  .why-number {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    color: #1e1e1e;
+    line-height: 1;
+    margin-bottom: 0.8rem;
+  }
+
+  .why-title {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 0.6rem;
+  }
+
+  .why-text { font-size: 0.88rem; color: #888; line-height: 1.6; }
+  .why-text strong { color: var(--orange); font-weight: 500; }
+
+  /* ── STAT STRIP ── */
+  .stats {
+    background: var(--orange);
+    padding: 3rem 2.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-bottom: 6rem;
+  }
+
+  .stat-item {
+    background: var(--orange);
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .stat-number {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 6vw, 5rem);
+    color: var(--black);
+    line-height: 1;
+    display: block;
+  }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: rgba(0,0,0,0.6);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+    display: block;
+  }
+
+  /* ── CTA SECTION ── */
+  .cta-section {
+    padding: 0 2.5rem 8rem;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .cta-section h2 {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 6vw, 5rem);
+    line-height: 1;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+  .cta-section h2 span { color: var(--orange); }
+
+  .cta-section p {
+    font-size: 1rem;
+    color: #888;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+
+  .btn-launch-lg {
+    background: var(--orange);
+    color: var(--black);
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    letter-spacing: 0.08em;
+    padding: 1.1rem 3.5rem;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s, box-shadow 0.15s;
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+  }
+  .btn-launch-lg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.15);
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+  .btn-launch-lg:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(255,78,0,0.5); }
+  .btn-launch-lg:hover::after { transform: translateX(0); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid #1a1a1a;
+    padding: 2rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+  }
+  .footer-logo span { color: var(--orange); }
+  .footer-text {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: #444;
+    letter-spacing: 0.08em;
+  }
+  .footer-cm {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: #444;
+    letter-spacing: 0.05em;
+  }
+  .footer-cm a { color: var(--orange); text-decoration: none; }
+
+  /* ── POPUP OVERLAY ── */
+  .popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.88);
+    backdrop-filter: blur(8px);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .popup-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .popup {
+    background: #111;
+    border: 1px solid #2a2a2a;
+    border-top: 3px solid var(--orange);
+    max-width: 480px;
+    width: 100%;
+    padding: 2.5rem;
+    position: relative;
+    transform: translateY(20px);
+    transition: transform 0.3s;
+  }
+  .popup-overlay.active .popup { transform: translateY(0); }
+
+  .popup-close {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    background: none;
+    border: none;
+    color: #555;
+    font-size: 1.4rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.15s;
+  }
+  .popup-close:hover { color: var(--white); }
+
+  .popup-tag {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--orange);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .popup-tag::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--orange);
+    border-radius: 50%;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .popup h3 {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 0.8rem;
+  }
+
+  .popup-body {
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+  .popup-body strong { color: var(--white); }
+
+  .form-group { margin-bottom: 1rem; }
+
+  .form-group label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: #555;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    background: #0a0a0a;
+    border: 1px solid #2a2a2a;
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    padding: 0.7rem 0.9rem;
+    outline: none;
+    transition: border-color 0.15s;
+    border-radius: 0;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus { border-color: var(--orange); }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+
+  .btn-submit {
+    width: 100%;
+    background: var(--orange);
+    color: var(--black);
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    letter-spacing: 0.08em;
+    padding: 0.9rem;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.15s;
+    margin-top: 0.5rem;
+  }
+  .btn-submit:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  .popup-success {
+    text-align: center;
+    padding: 1.5rem 0;
+    display: none;
+  }
+  .popup-success .success-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.8rem;
+  }
+  .popup-success h4 {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    letter-spacing: 0.05em;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .popup-success p {
+    font-size: 0.88rem;
+    color: #888;
+    font-weight: 300;
+  }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── LAPTOP MOCKUP ── */
+  .laptop-section {
+    padding: 2rem 2.5rem 5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .laptop-label-row {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .laptop-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--orange);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .laptop-desc {
+    font-size: 0.85rem;
+    color: #555;
+    font-weight: 300;
+  }
+  .laptop-wrap {
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+  .laptop {
+    width: 100%;
+    max-width: 900px;
+    position: relative;
+  }
+  .laptop-lid {
+    background: #1a1a1a;
+    border-radius: 12px 12px 0 0;
+    border: 2px solid #2a2a2a;
+    border-bottom: none;
+    padding: 16px 16px 0;
+    box-shadow: 0 -4px 40px rgba(0,0,0,0.6);
+    position: relative;
+  }
+  .laptop-bezel {
+    background: #111;
+    border-radius: 6px 6px 0 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .laptop-cam {
+    width: 6px;
+    height: 6px;
+    background: #222;
+    border-radius: 50%;
+    margin: 6px auto 4px;
+    border: 1px solid #333;
+  }
+  .laptop-screen {
+    background: #0a0f18;
+    height: 420px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .laptop-base {
+    background: #222;
+    height: 18px;
+    border-radius: 0 0 8px 8px;
+    border: 2px solid #2a2a2a;
+    border-top: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+  }
+  .laptop-hinge {
+    width: 60px;
+    height: 3px;
+    background: #333;
+    border-radius: 2px;
+  }
+  .laptop-trackpad {
+    width: 80px;
+    height: 4px;
+    background: #2a2a2a;
+    border-radius: 2px;
+    display: none;
+  }
+  .laptop-glow {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 60px;
+    background: rgba(255,78,0,0.1);
+    filter: blur(30px);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .laptop-caption {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: #444;
+    letter-spacing: 0.1em;
+    margin-top: 1.2rem;
+  }
+
+  /* ── DASHBOARD UI ── */
+  .dash-nav {
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    height: 36px;
+    background: #0d1117;
+    border-bottom: 1px solid #1a2030;
+    gap: 1rem;
+    flex-shrink: 0;
+  }
+  .dash-logo {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+    color: #e0ddd8;
+    white-space: nowrap;
+  }
+  .dash-logo span { color: var(--orange); }
+  .dash-nav-links {
+    display: flex;
+    gap: 0;
+    flex: 1;
+  }
+  .dash-nav-link {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: #444;
+    padding: 0 10px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.08em;
+    border-bottom: 2px solid transparent;
+    cursor: default;
+  }
+  .dash-nav-link.active { color: var(--orange); border-bottom-color: var(--orange); }
+  .dash-nav-right { margin-left: auto; }
+  .dash-stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255,78,0,0.1);
+    border: 1px solid rgba(255,78,0,0.25);
+    border-radius: 20px;
+    padding: 3px 8px;
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    color: var(--orange);
+    letter-spacing: 0.06em;
+  }
+  .dash-stat-dot {
+    width: 5px;
+    height: 5px;
+    background: var(--orange);
+    border-radius: 50%;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  .dash-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+  .dash-sidebar {
+    width: 160px;
+    flex-shrink: 0;
+    background: #0d1117;
+    border-right: 1px solid #1a2030;
+    padding: 10px 8px;
+    overflow: hidden;
+  }
+  .dash-sidebar-label {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    color: #333;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .dash-filter {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    color: #444;
+    padding: 4px 6px;
+    border-radius: 3px;
+    margin-bottom: 2px;
+    cursor: default;
+    letter-spacing: 0.04em;
+  }
+  .dash-filter.active {
+    background: rgba(255,78,0,0.12);
+    color: var(--orange);
+    border: 1px solid rgba(255,78,0,0.25);
+  }
+  .dash-date-range {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 4px;
+  }
+  .dash-date-btn {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    padding: 3px 5px;
+    color: #444;
+    border: 1px solid #1e1e1e;
+    border-radius: 3px;
+    cursor: default;
+  }
+  .dash-date-btn.active {
+    color: var(--orange);
+    border-color: rgba(255,78,0,0.4);
+    background: rgba(255,78,0,0.1);
+  }
+  .dash-hotspot {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 5px;
+    position: relative;
+  }
+  .dash-hotspot-bar {
+    height: 3px;
+    background: rgba(255,78,0,0.4);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .dash-hotspot-label {
+    font-family: var(--font-mono);
+    font-size: 0.52rem;
+    color: #555;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+  }
+  .dash-hotspot-count {
+    font-family: var(--font-mono);
+    font-size: 0.52rem;
+    color: var(--orange);
+    flex-shrink: 0;
+  }
+  .dash-map {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  .map-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .map-ctrl {
+    width: 20px;
+    height: 20px;
+    background: #0d1117;
+    border: 1px solid #1e2a3a;
+    color: #555;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    border-radius: 3px;
+  }
+  .map-live {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(13,17,23,0.85);
+    border: 1px solid #1e2a3a;
+    border-radius: 20px;
+    padding: 3px 8px;
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    color: #555;
+  }
+  .map-live-dot {
+    width: 5px;
+    height: 5px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  /* ── SAFETY BAR ── */
+  .safety-bar {
+    background: #0f0f0f;
+    border-top: 1px solid #1e1e1e;
+    border-bottom: 1px solid #1e1e1e;
+    padding: 1rem 2.5rem;
+    margin-bottom: 3rem;
+  }
+  .safety-bar-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+  .safety-icon { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+  .safety-text {
+    font-size: 0.85rem;
+    color: #888;
+    line-height: 1.5;
+    font-weight: 300;
+  }
+  .safety-text strong { color: var(--white); font-weight: 500; }
+
+  /* ── INFRASTRUCTURE CARD ── */
+  .infra-card {
+    margin-top: 1.5px;
+    background: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    border-left: 4px solid var(--orange);
+    display: grid;
+    grid-template-columns: 1fr 360px;
+  }
+  .infra-card-left {
+    padding: 2.5rem;
+    border-right: 1px solid #1a1a1a;
+  }
+  .infra-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--orange);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .infra-title {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    line-height: 1.05;
+    margin-bottom: 1.2rem;
+    color: var(--white);
+  }
+  .infra-body {
+    font-size: 0.9rem;
+    color: #888;
+    line-height: 1.7;
+    margin-bottom: 0.8rem;
+    font-weight: 300;
+  }
+  .infra-body strong { color: var(--white); font-weight: 500; }
+  .infra-body:last-child { margin-bottom: 0; }
+  .infra-card-right {
+    padding: 2.5rem;
+    display: flex;
+    align-items: center;
+  }
+  .infra-stat-block { width: 100%; }
+  .infra-stat { padding: 1.2rem 0; }
+  .infra-stat-num {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    color: var(--orange);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .infra-stat-label {
+    font-size: 0.8rem;
+    color: #666;
+    line-height: 1.4;
+    font-weight: 300;
+  }
+  .infra-stat-label em { color: var(--white); font-style: normal; font-weight: 500; }
+  .infra-divider { height: 1px; background: #1a1a1a; }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; padding-top: 6rem; }
+    .hero-right { display: none; }
+    .compare-grid { grid-template-columns: 1fr; }
+    .why-grid { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: 1fr; }
+    .infra-card { grid-template-columns: 1fr; }
+    .infra-card-left { border-right: none; border-bottom: 1px solid #1a1a1a; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Cycle<span>Report</span></div>
+  <div class="nav-tag">By Cycling Matters</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Toronto's trusted third party for cycling safety</div>
+    <h1>
+      Your incident.
+      <span class="accent">Their silence.</span>
+      No more.
+    </h1>
+    <p class="hero-body">
+      Every day, Toronto cyclists are doored, buzzed, cut off, and harassed.
+      Most never report it. <strong>Not because they don't care —
+      but because the system makes it pointless.</strong>
+      CycleReport is the independent, trusted third party that changes that —
+      for cyclists, for local police services, and for the City.
+    </p>
+    <div class="hero-cta">
+      <button class="btn-launch" onclick="trackAndLaunch('hero')">Launch CycleReport</button>
+      <span class="hero-note">An independent platform by Cycling Matters · Free to use</span>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-island"></div>
+        <div class="phone-screen">
+          <div class="app-status">
+            <span>9:41</span>
+            <span>●●●</span>
+          </div>
+          <div class="app-header">
+            <div class="app-header-title">Cycle<span>Report</span></div>
+            <div class="app-badge">3 Active</div>
+          </div>
+          <div class="app-capture-btn">⚡ REPORT INCIDENT</div>
+          <div class="app-section-label">Recent Reports</div>
+
+          <div class="app-report">
+            <div class="app-report-icon">🚗</div>
+            <div>
+              <div class="app-report-type">Dangerous Pass</div>
+              <div class="app-report-detail">Bloor &amp; Spadina · Under Review</div>
+              <div class="app-report-meta">CM-2026-04821 · 2 days ago</div>
+            </div>
+          </div>
+
+          <div class="app-report submitted">
+            <div class="app-report-icon">🚪</div>
+            <div>
+              <div class="app-report-type">Dooring</div>
+              <div class="app-report-detail">King &amp; Bathurst · Under Review</div>
+              <div class="app-report-meta">CM-2026-04796 · 5 days ago</div>
+            </div>
+          </div>
+
+          <div class="app-report">
+            <div class="app-report-icon">🚦</div>
+            <div>
+              <div class="app-report-type">Red Light</div>
+              <div class="app-report-detail">Queen &amp; Parliament · Monitoring</div>
+              <div class="app-report-meta">CM-2026-04751 · 1 wk ago</div>
+            </div>
+          </div>
+
+          <div class="app-bottom-nav">
+            <div class="app-nav-item">
+              <div class="app-nav-dot active"></div>
+              <div class="app-nav-label active">Reports</div>
+            </div>
+            <div class="app-nav-item">
+              <div class="app-nav-dot"></div>
+              <div class="app-nav-label">Map</div>
+            </div>
+            <div class="app-nav-item">
+              <div class="app-nav-dot"></div>
+              <div class="app-nav-label">Submit</div>
+            </div>
+            <div class="app-nav-item">
+              <div class="app-nav-dot"></div>
+              <div class="app-nav-label">Profile</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-glow"></div>
+    </div>
+  </div>
+</section>
+
+<!-- LAPTOP MOCKUP -->
+<section class="laptop-section">
+  <div class="laptop-label-row">
+    <div class="laptop-eyebrow">Public Dashboard</div>
+    <div class="laptop-desc">Every anonymized report appears on the live public map — visible to anyone, in real time</div>
+  </div>
+  <div class="laptop-wrap">
+    <div class="laptop">
+      <div class="laptop-lid">
+        <div class="laptop-bezel">
+          <div class="laptop-cam"></div>
+          <div class="laptop-screen">
+
+            <!-- Dashboard nav -->
+            <div class="dash-nav">
+              <div class="dash-logo">Cycle<span>Report</span></div>
+              <div class="dash-nav-links">
+                <div class="dash-nav-link active">Map</div>
+                <div class="dash-nav-link">Reports</div>
+                <div class="dash-nav-link">Trends</div>
+              </div>
+              <div class="dash-nav-right">
+                <div class="dash-stat-pill">
+                  <span class="dash-stat-dot"></span>
+                  <span>Live · 1,847 incidents</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dashboard body -->
+            <div class="dash-body">
+
+              <!-- Sidebar -->
+              <div class="dash-sidebar">
+                <div class="dash-sidebar-label">Filter by type</div>
+                <div class="dash-filter active">All incidents</div>
+                <div class="dash-filter">🚗 Dangerous pass</div>
+                <div class="dash-filter">🚪 Dooring</div>
+                <div class="dash-filter">🚦 Red light</div>
+                <div class="dash-filter">📢 Harassment</div>
+                <div class="dash-filter">⚠️ Near-miss</div>
+                <div class="dash-sidebar-label" style="margin-top:14px">Date range</div>
+                <div class="dash-date-range">
+                  <div class="dash-date-btn active">30d</div>
+                  <div class="dash-date-btn">90d</div>
+                  <div class="dash-date-btn">1yr</div>
+                  <div class="dash-date-btn">All</div>
+                </div>
+                <div class="dash-sidebar-label" style="margin-top:14px">Top hotspots</div>
+                <div class="dash-hotspot">
+                  <div class="dash-hotspot-bar" style="width:88%"></div>
+                  <div class="dash-hotspot-label">Bloor &amp; Spadina</div>
+                  <div class="dash-hotspot-count">42</div>
+                </div>
+                <div class="dash-hotspot">
+                  <div class="dash-hotspot-bar" style="width:72%"></div>
+                  <div class="dash-hotspot-label">King &amp; Bathurst</div>
+                  <div class="dash-hotspot-count">34</div>
+                </div>
+                <div class="dash-hotspot">
+                  <div class="dash-hotspot-bar" style="width:60%"></div>
+                  <div class="dash-hotspot-label">Queen &amp; Parliament</div>
+                  <div class="dash-hotspot-count">28</div>
+                </div>
+                <div class="dash-hotspot">
+                  <div class="dash-hotspot-bar" style="width:48%"></div>
+                  <div class="dash-hotspot-label">Danforth &amp; Broadview</div>
+                  <div class="dash-hotspot-count">23</div>
+                </div>
+                <div class="dash-hotspot">
+                  <div class="dash-hotspot-bar" style="width:36%"></div>
+                  <div class="dash-hotspot-label">College &amp; Bay</div>
+                  <div class="dash-hotspot-count">17</div>
+                </div>
+              </div>
+
+              <!-- Map -->
+              <div class="dash-map">
+                <svg width="100%" height="100%" viewBox="0 0 580 340" preserveAspectRatio="xMidYMid slice">
+                  <defs>
+                    <radialGradient id="h1" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stop-color="#FF4E00" stop-opacity="0.6"/>
+                      <stop offset="55%" stop-color="#FF4E00" stop-opacity="0.18"/>
+                      <stop offset="100%" stop-color="#FF4E00" stop-opacity="0"/>
+                    </radialGradient>
+                    <radialGradient id="h2" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stop-color="#FF4E00" stop-opacity="0.4"/>
+                      <stop offset="60%" stop-color="#FF4E00" stop-opacity="0.1"/>
+                      <stop offset="100%" stop-color="#FF4E00" stop-opacity="0"/>
+                    </radialGradient>
+                    <radialGradient id="h3" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stop-color="#FF8C00" stop-opacity="0.28"/>
+                      <stop offset="100%" stop-color="#FF8C00" stop-opacity="0"/>
+                    </radialGradient>
+                    <clipPath id="mapclip">
+                      <rect width="580" height="340"/>
+                    </clipPath>
+                  </defs>
+
+                  <!-- Sky / background -->
+                  <rect width="580" height="340" fill="#0d1117"/>
+
+                  <!-- Lake Ontario — large body of water at bottom -->
+                  <path d="M 0 265 Q 80 258 160 262 Q 240 266 290 260 Q 360 254 440 258 Q 510 262 580 256 L 580 340 L 0 340 Z" fill="#0a1520" stroke="#1a2a3a" stroke-width="0.8"/>
+
+                  <!-- Toronto Islands (small shapes in lake) -->
+                  <ellipse cx="270" cy="292" rx="22" ry="5" fill="#111c2a" stroke="#1a2a3a" stroke-width="0.5"/>
+                  <ellipse cx="310" cy="298" rx="16" ry="4" fill="#111c2a" stroke="#1a2a3a" stroke-width="0.5"/>
+                  <ellipse cx="240" cy="300" rx="10" ry="3" fill="#111c2a" stroke="#1a2a3a" stroke-width="0.5"/>
+
+                  <!-- Harbour / waterfront -->
+                  <path d="M 160 262 Q 200 258 250 256 Q 290 254 330 256 Q 370 258 420 258" fill="none" stroke="#1e3048" stroke-width="1"/>
+
+                  <!-- City land mass — Toronto roughly rectangular with slight taper -->
+                  <rect x="0" y="0" width="580" height="265" fill="#0d1117"/>
+
+                  <!-- Don Valley — diagonal cut in east side -->
+                  <path d="M 460 0 Q 470 60 475 120 Q 480 180 490 230 Q 496 248 502 262" fill="none" stroke="#0a1520" stroke-width="8"/>
+                  <path d="M 460 0 Q 470 60 475 120 Q 480 180 490 230 Q 496 248 502 262" fill="none" stroke="#111c2a" stroke-width="4"/>
+
+                  <!-- Humber River — west side -->
+                  <path d="M 42 0 Q 44 40 46 90 Q 48 140 50 190 Q 52 230 54 262" fill="none" stroke="#0a1520" stroke-width="6"/>
+                  <path d="M 42 0 Q 44 40 46 90 Q 48 140 50 190 Q 52 230 54 262" fill="none" stroke="#111c2a" stroke-width="3"/>
+
+                  <!-- Gardiner Expressway / Lakeshore -->
+                  <path d="M 55 252 Q 150 246 290 244 Q 390 242 500 246 Q 540 248 580 246" fill="none" stroke="#1a2535" stroke-width="2.5"/>
+
+                  <!-- Major east-west roads -->
+                  <!-- Front St -->
+                  <line x1="55" y1="234" x2="500" y2="232" stroke="#162030" stroke-width="1.2"/>
+                  <!-- King St -->
+                  <line x1="55" y1="214" x2="490" y2="212" stroke="#1e2a3a" stroke-width="1.5"/>
+                  <!-- Queen St -->
+                  <line x1="55" y1="192" x2="490" y2="190" stroke="#1e2a3a" stroke-width="1.5"/>
+                  <!-- Dundas -->
+                  <line x1="55" y1="168" x2="490" y2="166" stroke="#162030" stroke-width="1.2"/>
+                  <!-- College / Carlton -->
+                  <line x1="55" y1="144" x2="490" y2="142" stroke="#1e2a3a" stroke-width="1.5"/>
+                  <!-- Bloor / Danforth -->
+                  <line x1="55" y1="108" x2="458" y2="108" stroke="#243550" stroke-width="2"/>
+                  <!-- St Clair -->
+                  <line x1="55" y1="68" x2="460" y2="66" stroke="#162030" stroke-width="1.2"/>
+                  <!-- Eglinton -->
+                  <line x1="55" y1="32" x2="460" y2="30" stroke="#1e2a3a" stroke-width="1.5"/>
+
+                  <!-- Major north-south roads -->
+                  <!-- Hwy 427 / west boundary -->
+                  <line x1="58" y1="0" x2="58" y2="252" stroke="#162030" stroke-width="1.2"/>
+                  <!-- Dufferin -->
+                  <line x1="110" y1="0" x2="110" y2="252" stroke="#162030" stroke-width="1.2"/>
+                  <!-- Bathurst -->
+                  <line x1="168" y1="0" x2="164" y2="252" stroke="#1e2a3a" stroke-width="1.5"/>
+                  <!-- Spadina -->
+                  <line x1="218" y1="0" x2="215" y2="252" stroke="#1e2a3a" stroke-width="1.5"/>
+                  <!-- University Ave -->
+                  <line x1="264" y1="50" x2="262" y2="212" stroke="#243550" stroke-width="2"/>
+                  <!-- Yonge St -->
+                  <line x1="308" y1="0" x2="308" y2="252" stroke="#2e4060" stroke-width="2.5"/>
+                  <!-- Church -->
+                  <line x1="334" y1="30" x2="334" y2="240" stroke="#162030" stroke-width="1.2"/>
+                  <!-- Parliament -->
+                  <line x1="380" y1="0" x2="378" y2="252" stroke="#1e2a3a" stroke-width="1.5"/>
+                  <!-- Broadview -->
+                  <line x1="458" y1="0" x2="456" y2="200" stroke="#1e2a3a" stroke-width="1.5"/>
+
+                  <!-- Allen Rd / Avenue Rd diagonal -->
+                  <path d="M 248 0 L 264 50" fill="none" stroke="#162030" stroke-width="1.2"/>
+
+                  <!-- Street labels -->
+                  <g font-family="monospace" font-size="6.5" fill="#2a3f58">
+                    <text x="2" y="106">Bloor</text>
+                    <text x="2" y="140">College</text>
+                    <text x="2" y="188">Queen</text>
+                    <text x="2" y="210">King</text>
+                    <text x="2" y="230">Front</text>
+                    <text x="2" y="66">St Clair</text>
+                    <text x="215" y="8">Spadina</text>
+                    <text x="162" y="8">Bathurst</text>
+                    <text x="302" y="8">Yonge</text>
+                    <text x="374" y="8">Parliament</text>
+                    <text x="452" y="8">Broadview</text>
+                  </g>
+
+                  <!-- Lake label -->
+                  <text x="290" y="318" font-family="monospace" font-size="7" fill="#1a2a3a" text-anchor="middle" letter-spacing="3">LAKE ONTARIO</text>
+
+                  <!-- ── HEAT BLOBS placed on real Toronto intersections ── -->
+                  <!-- Bloor & Spadina (hottest) -->
+                  <ellipse cx="215" cy="108" rx="52" ry="38" fill="url(#h1)"/>
+                  <!-- King & Bathurst -->
+                  <ellipse cx="164" cy="213" rx="46" ry="34" fill="url(#h1)"/>
+                  <!-- Queen & Parliament -->
+                  <ellipse cx="378" cy="191" rx="42" ry="30" fill="url(#h2)"/>
+                  <!-- Danforth & Broadview -->
+                  <ellipse cx="456" cy="108" rx="38" ry="28" fill="url(#h2)"/>
+                  <!-- College & Bay (near University) -->
+                  <ellipse cx="262" cy="143" rx="34" ry="26" fill="url(#h2)"/>
+                  <!-- Yonge & Bloor -->
+                  <ellipse cx="308" cy="108" rx="30" ry="22" fill="url(#h2)"/>
+                  <!-- Queen & Spadina -->
+                  <ellipse cx="215" cy="191" rx="26" ry="20" fill="url(#h3)"/>
+                  <!-- King & Yonge -->
+                  <ellipse cx="308" cy="213" rx="24" ry="18" fill="url(#h3)"/>
+                  <!-- Bloor & Bathurst -->
+                  <ellipse cx="165" cy="108" rx="22" ry="16" fill="url(#h3)"/>
+                  <!-- Dundas & Yonge -->
+                  <ellipse cx="308" cy="167" rx="22" ry="16" fill="url(#h3)"/>
+                  <!-- Queen & Dufferin -->
+                  <ellipse cx="110" cy="191" rx="20" ry="15" fill="url(#h3)"/>
+                  <!-- Front & Parliament -->
+                  <ellipse cx="378" cy="233" rx="18" ry="14" fill="url(#h3)"/>
+
+                  <!-- ── INCIDENT DOTS ── -->
+                  <!-- Bloor & Spadina cluster -->
+                  <g fill="#FF4E00">
+                    <circle cx="215" cy="108" r="3.5" opacity="0.95"/>
+                    <circle cx="223" cy="103" r="2.5" opacity="0.8"/>
+                    <circle cx="207" cy="114" r="2" opacity="0.65"/>
+                    <circle cx="226" cy="111" r="2" opacity="0.55"/>
+                    <circle cx="205" cy="101" r="2" opacity="0.6"/>
+                    <circle cx="219" cy="118" r="1.5" opacity="0.5"/>
+                    <circle cx="210" cy="97"  r="1.5" opacity="0.45"/>
+                    <circle cx="229" cy="100" r="1.5" opacity="0.4"/>
+                  </g>
+                  <!-- King & Bathurst cluster -->
+                  <g fill="#FF4E00">
+                    <circle cx="164" cy="213" r="3.5" opacity="0.9"/>
+                    <circle cx="173" cy="207" r="2.5" opacity="0.7"/>
+                    <circle cx="156" cy="219" r="2"   opacity="0.6"/>
+                    <circle cx="176" cy="216" r="2"   opacity="0.5"/>
+                    <circle cx="154" cy="206" r="2"   opacity="0.55"/>
+                    <circle cx="169" cy="223" r="1.5" opacity="0.45"/>
+                    <circle cx="158" cy="200" r="1.5" opacity="0.4"/>
+                  </g>
+                  <!-- Queen & Parliament -->
+                  <g fill="#FF6B00">
+                    <circle cx="378" cy="191" r="3"   opacity="0.85"/>
+                    <circle cx="386" cy="185" r="2.5" opacity="0.65"/>
+                    <circle cx="370" cy="197" r="2"   opacity="0.55"/>
+                    <circle cx="389" cy="194" r="2"   opacity="0.45"/>
+                    <circle cx="369" cy="184" r="1.5" opacity="0.4"/>
+                    <circle cx="383" cy="200" r="1.5" opacity="0.35"/>
+                  </g>
+                  <!-- Danforth & Broadview -->
+                  <g fill="#FF6B00">
+                    <circle cx="456" cy="108" r="3"   opacity="0.82"/>
+                    <circle cx="463" cy="102" r="2.5" opacity="0.62"/>
+                    <circle cx="449" cy="114" r="2"   opacity="0.52"/>
+                    <circle cx="464" cy="111" r="1.5" opacity="0.42"/>
+                  </g>
+                  <!-- College & Bay -->
+                  <g fill="#FF8C00">
+                    <circle cx="262" cy="143" r="2.5" opacity="0.8"/>
+                    <circle cx="270" cy="137" r="2"   opacity="0.6"/>
+                    <circle cx="255" cy="149" r="2"   opacity="0.5"/>
+                    <circle cx="272" cy="145" r="1.5" opacity="0.4"/>
+                  </g>
+                  <!-- Yonge & Bloor -->
+                  <g fill="#FF8C00">
+                    <circle cx="308" cy="108" r="2.5" opacity="0.78"/>
+                    <circle cx="315" cy="103" r="2"   opacity="0.58"/>
+                    <circle cx="301" cy="114" r="1.5" opacity="0.48"/>
+                    <circle cx="316" cy="110" r="1.5" opacity="0.38"/>
+                  </g>
+                  <!-- Scattered single dots across the city -->
+                  <g fill="#FF8C00" opacity="0.32">
+                    <circle cx="140" cy="143" r="1.5"/>
+                    <circle cx="240" cy="167" r="1.5"/>
+                    <circle cx="190" cy="68"  r="1.5"/>
+                    <circle cx="350" cy="143" r="1.5"/>
+                    <circle cx="420" cy="167" r="1.5"/>
+                    <circle cx="280" cy="191" r="1.5"/>
+                    <circle cx="130" cy="233" r="1.5"/>
+                    <circle cx="430" cy="213" r="1.5"/>
+                    <circle cx="340" cy="233" r="1.5"/>
+                    <circle cx="200" cy="233" r="1.5"/>
+                    <circle cx="80"  cy="143" r="1.5"/>
+                    <circle cx="80"  cy="213" r="1.5"/>
+                    <circle cx="360" cy="68"  r="1.5"/>
+                    <circle cx="260" cy="68"  r="1.5"/>
+                    <circle cx="500" cy="167" r="1.5"/>
+                    <circle cx="420" cy="68"  r="1.5"/>
+                    <circle cx="140" cy="68"  r="1.5"/>
+                  </g>
+
+                  <!-- Active tooltip — Bloor & Spadina -->
+                  <rect x="228" y="76" width="118" height="44" rx="4" fill="#0a1018" stroke="#FF4E00" stroke-width="1"/>
+                  <line x1="228" y1="96" x2="215" y2="108" stroke="#FF4E00" stroke-width="0.8"/>
+                  <text x="236" y="90"  font-family="monospace" font-size="7"   fill="#FF4E00">BLOOR &amp; SPADINA</text>
+                  <text x="236" y="102" font-family="monospace" font-size="6.5" fill="#aaa">42 incidents · 30 days</text>
+                  <text x="236" y="113" font-family="monospace" font-size="6"   fill="#666">Dangerous pass · Dooring</text>
+
+                  <!-- Attribution -->
+                  <text x="576" y="337" font-family="monospace" font-size="6" fill="#1e2a3a" text-anchor="end">CycleReport · Anonymized public data</text>
+                </svg>
+                <div class="map-controls">
+                  <div class="map-ctrl">+</div>
+                  <div class="map-ctrl">−</div>
+                </div>
+                <div class="map-live">
+                  <span class="map-live-dot"></span>
+                  <span>Live</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="laptop-base">
+        <div class="laptop-hinge"></div>
+        <div class="laptop-trackpad"></div>
+      </div>
+    </div>
+    <div class="laptop-glow"></div>
+  </div>
+  <div class="laptop-caption">The public dashboard — anonymized incident data, visible to everyone, updated in real time</div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider">
+  <div class="divider-line"></div>
+  <div class="divider-text">vs. Police Online Reporting</div>
+  <div class="divider-line"></div>
+</div>
+
+<!-- SAFETY CALLOUT -->
+<div class="safety-bar">
+  <div class="safety-bar-inner">
+    <span class="safety-icon">🚨</span>
+    <span class="safety-text"><strong>Emergency? Call 911.</strong> For any incident involving injury or immediate danger, always call emergency services first. CycleReport is a trusted third party — we encourage every cyclist to also report incidents directly to <strong>your local police service</strong>. We exist to support and complement that process, not replace it.</span>
+  </div>
+</div>
+
+<!-- COMPARISON -->
+<section class="compare reveal">
+  <div class="section-label">Side by Side</div>
+  <h2 class="section-title">We fill the gap<br><em>police reporting left open.</em></h2>
+  <div class="compare-grid">
+    <div class="compare-col">
+      <div class="compare-col-header">
+        <div class="compare-logo cr">CycleReport</div>
+        <div class="compare-tag better">Toronto's trusted third party</div>
+      </div>
+      <div class="compare-item">
+        <div class="compare-check check-yes">✓</div>
+        <div class="compare-text"><strong>Capture when you're ready</strong> — jot down what happened on your phone, add photos and details later, submit when you're comfortable</div>
+      </div>
+      <div class="compare-item">
+        <div class="compare-check check-yes">✓</div>
+        <div class="compare-text"><strong>Instant acknowledgement</strong> — every submission is confirmed immediately with a reference number</div>
+      </div>
+      <div class="compare-item">
+        <div class="compare-check check-yes">✓</div>
+        <div class="compare-text"><strong>Real status updates</strong> — track your report from submission through moderation to publication. You always know where it stands.</div>
+      </div>
+      <div class="compare-item">
+        <div class="compare-check check-yes">✓</div>
+        <div class="compare-text"><strong>Anonymized and made public</strong> — your personal details are never published. Your incident is — contributing to a transparent, public record that anyone can see</div>
+      </div>
+      <div class="compare-item">
+        <div class="compare-check check-yes">✓</div>
+        <div class="compare-text"><strong>Built to complement police services</strong> — designed to connect directly with online reporting systems the moment integration options are available</div>
+      </div>
+      <div class="compare-item">
+        <div class="compare-check check-yes">✓</div>
+        <div class="compare-text"><strong>Public accountability map</strong> — your anonymized report contributes to a dataset that holds police services and the City publicly accountable</div>
+      </div>
+      <div class="compare-item">
+        <div class="compare-check check-yes">✓</div>
+        <div class="compare-text"><strong>Pattern detection and infrastructure insights</strong> — incident clusters across reports reveal dangerous intersections, poorly designed bike lanes, and infrastructure gaps the City needs to fix</div>
+      </div>
+    </div>
+    <div class="compare-col">
+      <div class="compare-col-header">
+        <div class="compare-logo tps">Police Online Reporting</div>
+        <div class="compare-tag worse">e.g. tps.ca/services/online-reporting</div>
+      </div>
+      <div class="compare-item">
+        <div class="compare-check check-no">✗</div>
+        <div class="compare-text">Designed for collisions, not the full picture — most police reporting forms have no structured category for near-misses, harassment, dangerous passes, or doorings that don't result in injury</div>
+      </div>
+      <div class="compare-item">
+        <div class="compare-check check-no">✗</div>
+        <div class="compare-text">Submit and receive silence — a case number is the last communication you'll get</div>
+      </div>
+      <div class="compare-item">
+        <div class="compare-check check-no">✗</div>
+        <div class="compare-text">Inconsistent follow-up — some cyclists receive updates, many hear nothing after their initial case number. There is no guaranteed status tracking or outcome notification</div>
+      </div>
+      <div class="compare-item">
+        <div class="compare-check check-no">✗</div>
+        <div class="compare-text">No public transparency — reports are not published or anonymized for public benefit. The data disappears into the system</div>
+      </div>
+      <div class="compare-item">
+        <div class="compare-check check-no">✗</div>
+        <div class="compare-text">No outcome notification — you will never be told what happened as a result of your report</div>
+      </div>
+      <div class="compare-item">
+        <div class="compare-check check-no">✗</div>
+        <div class="compare-text">No public data — police services rarely publish how many cycling complaints are received or what happens to them</div>
+      </div>
+      <div class="compare-item">
+        <div class="compare-check check-no">✗</div>
+        <div class="compare-text">Each report is isolated — no mechanism to detect patterns across incidents or flag repeat offenders</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider" style="padding-top: 5rem;">
+  <div class="divider-line"></div>
+  <div class="divider-text">The Data Problem</div>
+  <div class="divider-line"></div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-item">
+    <span class="stat-number">92%</span>
+    <span class="stat-label">Of Toronto cycling injuries never appear in police data — York University / ICES, 2024</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">?</span>
+    <span class="stat-label">Guaranteed follow-ups after filing a police report online — experience varies widely</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">100%</span>
+    <span class="stat-label">Of CycleReport submissions are acknowledged, anonymized, and published publicly to increase transparency</span>
+  </div>
+</div>
+<!-- WHY -->
+<section class="why reveal">
+  <div class="section-label">Why It Matters</div>
+  <h2 class="section-title">Report here.<br><em>Because your incident matters.</em></h2>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-number">01</div>
+      <div class="why-title">Your record exists</div>
+      <div class="why-text">Most dangerous incidents vanish without a trace. A report on CycleReport creates a <strong>timestamped, geotagged record captured close to the incident</strong> — a contemporaneous account that can support insurance claims, strengthen a police report, or establish a pattern if the same location or vehicle appears again.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-number">02</div>
+      <div class="why-title">The data speaks</div>
+      <div class="why-text">Police services only publish collision data — the worst outcomes. And most police reporting forms aren't designed to capture anything less: <strong>near-misses, harassment, dangerous passes, doorings that don't injure</strong> — these incident types have no structured home in a standard police report. CycleReport is built specifically for them. That unreported shadow is where most cyclists actually live, and it's the data that drives real change — with police services, City planners, and infrastructure teams.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-number">03</div>
+      <div class="why-title">Accountability, published</div>
+      <div class="why-text">A police service can't publish data that reflects on its own gaps. We can. <strong>Every incident report is anonymized and added to the public map in real time</strong> — hotspot clusters, incident types, affected corridors. Raw, unfiltered cycling safety data that journalists, councillors, and city planners can see, cite, and act on. No waiting for an annual report. No filtering through a press office.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-number">04</div>
+      <div class="why-title">A trusted third party</div>
+      <div class="why-text">CycleReport is operated by Cycling Matters — an independent cycling advocacy organization, not a government body or police service. That independence is the point. <strong>Cyclists trust us. Police services can trust our data. Cities can cite it.</strong> When a Toronto cyclist was doored by a police officer in 2026 and cited for not wearing a helmet — which is legal for adults in Ontario — that's exactly why an independent third party matters.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-number">05</div>
+      <div class="why-title">Built to work together</div>
+      <div class="why-text">CycleReport is designed to complement police services — not replace them. We're ready to connect directly with online reporting systems <strong>the moment integration options are available.</strong> Our data is structured and waiting.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-number">06</div>
+      <div class="why-title">You'll hear back</div>
+      <div class="why-text">This shouldn't be radical: every report gets a response. <strong>Instant acknowledgement.</strong> Light moderation to keep the data accurate and credible. Status updates at every stage. A feedback loop that currently doesn't exist anywhere else in Toronto.</div>
+    </div>
+  </div>
+
+  <!-- Infrastructure feature card -->
+  <div class="infra-card reveal">
+    <div class="infra-card-left">
+      <div class="infra-label">Beyond policing</div>
+      <h3 class="infra-title">Some dangers are built into the road itself.</h3>
+      <p class="infra-body">
+        When incidents cluster at the same intersection month after month,
+        that's not just a driver problem — it's a design problem.
+        CycleReport's public map makes those patterns visible to everyone:
+        <strong>high-incident corridors, dangerous intersections, and the roads
+        where cyclists consistently feel unsafe</strong> — missing protected lanes,
+        blind corners, poor sightlines, conflict points with turning vehicles.
+      </p>
+      <p class="infra-body">
+        That data is public and open. City planners, advocacy groups, journalists,
+        councillors, researchers — anyone can see it, cite it, and act on it.
+        Transparency is how patterns become pressure.
+        <strong>Your report is part of that public record.</strong>
+      </p>
+    </div>
+    <div class="infra-card-right">
+      <div class="infra-stat-block">
+        <div class="infra-stat">
+          <span class="infra-stat-num">Open</span>
+          <span class="infra-stat-label">All anonymized incident data is publicly available — no login, no request required</span>
+        </div>
+        <div class="infra-divider"></div>
+        <div class="infra-stat">
+          <span class="infra-stat-num">Real‑time</span>
+          <span class="infra-stat-label">Patterns appear on the public map as reports come in — not in an annual report months later</span>
+        </div>
+        <div class="infra-divider"></div>
+        <div class="infra-stat">
+          <span class="infra-stat-num">Everyone</span>
+          <span class="infra-stat-label">Cyclists, planners, journalists, advocates, researchers — the data belongs to the community</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- CTA -->
+<section class="cta-section reveal" style="margin-top: 6rem;">
+  <div class="section-label">Ready?</div>
+  <h2>Stop disappearing.<br><span>Start counting.</span></h2>
+  <p>Every near-miss that goes undocumented is a data point that justifies inaction.<br>Your incident happened. Make it count.</p>
+  <button class="btn-launch-lg" onclick="trackAndLaunch('cta')">Launch CycleReport</button>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Cycle<span>Report</span></div>
+  <div class="footer-text">An independent third-party platform · Not a government or police service</div>
+  <div class="footer-cm">A <a href="#">Cycling Matters</a> platform</div>
+</footer>
+
+<!-- POPUP -->
+<div class="popup-overlay" id="popup" onclick="closePopupOnOverlay(event)">
+  <div class="popup">
+    <button class="popup-close" onclick="closePopup()">✕</button>
+
+    <div class="popup-tag">Early Access</div>
+    <h3>Ride with us.</h3>
+    <p class="popup-body">
+      CycleReport is in active development and we're building it with the cycling community.
+      <strong>Request early access</strong> — join as a tester, shape the features,
+      and help us build the platform Toronto cyclists actually need.
+    </p>
+
+    <div id="contact-form">
+      <div class="form-group">
+        <label>Your name</label>
+        <input type="text" id="f-name" placeholder="Alex Chen" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>Email address</label>
+        <input type="email" id="f-email" placeholder="alex@example.com" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>What would make CycleReport essential for you? (optional)</label>
+        <textarea id="f-message" placeholder="A feature you'd love, a gap you've noticed, or a recent incident that went nowhere…"></textarea>
+      </div>
+      <button class="btn-submit" onclick="submitForm()">Request Early Access →</button>
+    </div>
+
+    <div class="popup-success" id="form-success">
+      <div class="success-icon">🚲</div>
+      <h4>You're on the list.</h4>
+      <p>We'll be in touch with early access details.<br>Your input will help shape what we build.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── ANALYTICS ──
+  const analytics = {
+    events: [],
+    track(event, data = {}) {
+      const entry = {
+        event,
+        data,
+        timestamp: new Date().toISOString(),
+        page: window.location.href,
+        referrer: document.referrer,
+        userAgent: navigator.userAgent.substring(0, 80)
+      };
+      this.events.push(entry);
+      console.log('[CycleReport Analytics]', entry);
+      // In production: replace with your analytics endpoint
+      // fetch('/api/analytics', { method: 'POST', body: JSON.stringify(entry) });
+      // Or: window.gtag?.('event', event, data);
+      // Or: window.plausible?.(event, { props: data });
+    }
+  };
+
+  // Track page view on load
+  analytics.track('page_view', { section: 'landing' });
+
+  // Track scroll depth
+  let maxScroll = 0;
+  window.addEventListener('scroll', () => {
+    const pct = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+    if (pct > maxScroll + 25) {
+      maxScroll = pct;
+      analytics.track('scroll_depth', { depth_pct: pct });
+    }
+  });
+
+  // ── LAUNCH BUTTON ──
+  function trackAndLaunch(source) {
+    analytics.track('launch_click', { source });
+    openPopup();
+  }
+
+  // ── POPUP ──
+  function openPopup() {
+    document.getElementById('popup').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    analytics.track('popup_open');
+  }
+
+  function closePopup() {
+    document.getElementById('popup').classList.remove('active');
+    document.body.style.overflow = '';
+    analytics.track('popup_close');
+  }
+
+  function closePopupOnOverlay(e) {
+    if (e.target === document.getElementById('popup')) closePopup();
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closePopup();
+  });
+
+  // ── FORM SUBMIT ──
+  async function submitForm() {
+    const name    = document.getElementById('f-name').value.trim();
+    const email   = document.getElementById('f-email').value.trim();
+    const message = document.getElementById('f-message').value.trim();
+
+    if (!email || !email.includes('@')) {
+      document.getElementById('f-email').style.borderColor = '#ff1744';
+      document.getElementById('f-email').focus();
+      return;
+    }
+
+    const btn = document.querySelector('.btn-submit');
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('https://formspree.io/f/mojbbwoy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ name, email, message })
+      });
+
+      if (!res.ok) throw new Error('Formspree error');
+
+      analytics.track('form_submit', {
+        has_name: !!name,
+        has_message: !!message,
+        email_domain: email.split('@')[1]
+      });
+
+      document.getElementById('contact-form').style.display = 'none';
+      document.getElementById('form-success').style.display = 'block';
+
+    } catch (err) {
+      btn.textContent = 'Request Early Access →';
+      btn.disabled = false;
+      btn.style.background = '#cc2200';
+      btn.textContent = 'Something went wrong — try again';
+      console.error('Formspree error:', err);
+    }
+  }
+  }
+
+  // ── SCROLL REVEAL ──
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

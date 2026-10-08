@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Cycling Matters</title>
+
+  <link rel="stylesheet" href="styles.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8XK3BHK2KQ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-8XK3BHK2KQ');
+  </script>
+  <script src="main.js"></script>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <div class="brand">
+      <a href="index.html">Cycling Matters</a>
+    </div>
+    <div class="nav-links">
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-trigger" aria-haspopup="true">
+          Apps
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="mediamanager.html" target="_blank" role="menuitem">Media Manager</a>
+          <a href="cyclereport.html" target="_blank" role="menuitem">CycleReport</a>
+        </div>
+      </div>
+      <a href="blog.html">Blog</a>
+      <a href="https://www.youtube.com/@CyclingMatters-ca" target="_blank">Videos</a>
+      <a href="about.html">About</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <!-- LOGO -->
+    <img
+      class="hero-image"
+      src="https://cyclingmatters.ca/wp-content/uploads/2025/04/Logo-Cream-2048x1395.png"
+      alt="Cycling Matters"
+    />
+
+    <!-- TESTIMONIALS -->
+    <div
+      class="testimonial-wrapper"
+      id="testimonialWrapper">
+    </div>
+
+  <!-- FEEDBACK TITLE -->
+  <div class="feedback-title">
+    Tell us why cycling matters
+  </div>
+
+    <!-- FORM -->
+    <form
+      id="storyForm"
+      action="https://formspree.io/f/xeedvopv"
+      method="POST"
+    >
+
+      <div id="formFields">
+
+        <!-- TEXT AREA -->
+        <textarea
+          id="messageBox"
+          name="message"
+          maxlength="280"
+          placeholder="Share your story"
+          required
+        ></textarea>
+
+        <!-- CHARACTER COUNT -->
+        <div class="char-row">
+          <div id="charCount" class="char-count">0 / 280</div>
+        </div>
+
+        <!-- SUBMIT -->
+        <button type="submit">
+          Submit
+        </button>
+
+      </div>
+
+      <!-- THANK YOU -->
+      <div id="thankYou">
+        Thank you for sharing.
+      </div>
+
+    </form>
+
+  </section>
+
+  <!-- TESTIMONIAL SCRIPT -->
+  <script>
+
+    let testimonials = [];
+    let current = 0;
+
+    function renderTestimonial() {
+
+      const t = testimonials[current];
+
+      document.getElementById("testimonialWrapper").innerHTML = `
+        <div class="testimonial">
+          <h1>${t.text}</h1>
+          <h2>${t.name}</h2>
+        </div>
+      `;
+    }
+
+    async function loadTestimonials() {
+
+      try {
+
+        const response =
+          await fetch("./testimonials.json");
+
+        testimonials =
+          await response.json();
+
+        if (!Array.isArray(testimonials)) return;
+        if (testimonials.length === 0) return;
+
+        renderTestimonial();
+
+        setInterval(() => {
+
+          current =
+            (current + 1)
+            % testimonials.length;
+
+          renderTestimonial();
+
+        }, 5000);
+
+      } catch (error) {
+
+        console.error(
+          "Unable to load testimonials:",
+          error
+        );
+
+      }
+    }
+
+    loadTestimonials();
+
+  </script>
+
+  <!-- FORM SCRIPT -->
+  <script>
+
+    const form =
+      document.getElementById("storyForm");
+
+    const formFields =
+      document.getElementById("formFields");
+
+    const thankYou =
+      document.getElementById("thankYou");
+
+    const messageBox =
+      document.getElementById("messageBox");
+
+    const charCount =
+      document.getElementById("charCount");
+
+    /* FORCE HIDDEN */
+
+    thankYou.style.display = "none";
+
+    /* CHARACTER COUNT */
+
+    messageBox.addEventListener("input", () => {
+
+      charCount.textContent =
+        `${messageBox.value.length} / 280`;
+
+    });
+
+    /* SUBMIT */
+
+    form.addEventListener("submit", async (e) => {
+
+      e.preventDefault();
+
+      const data = new FormData(form);
+
+      try {
+
+        await fetch(form.action, {
+          method: "POST",
+          body: data,
+          headers: {
+            "Accept": "application/json"
+          }
+        });
+
+        formFields.style.display = "none";
+
+        thankYou.style.display = "block";
+
+      } catch (error) {
+
+        console.error(
+          "Form submission failed:",
+          error
+        );
+
+      }
+
+    });
+
+  </script>
+
+</body>
+</html>

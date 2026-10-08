@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>About - Cycling Matters</title>
+
+  <link rel="stylesheet" href="styles.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8XK3BHK2KQ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-8XK3BHK2KQ');
+  </script>
+  <script src="main.js"></script>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <div class="brand">
+      <a href="index.html">Cycling Matters</a>
+    </div>
+    <div class="nav-links">
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-trigger" aria-haspopup="true">
+          Apps
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="mediamanager.html" target="_blank" role="menuitem">Media Manager</a>
+          <a href="cyclereport.html" target="_blank" role="menuitem">CycleReport</a>
+        </div>
+      </div>
+      <a href="blog.html">Blog</a>
+      <a href="https://www.youtube.com/@CyclingMatters-ca" target="_blank">Videos</a>
+      <a href="about.html">About</a>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <div class="card">
+
+      <h1 class="reveal">Hi, I'm Brian.</h1>
+
+      <div class="image-grid reveal">
+        <img src="https://cyclingmatters.ca/wp-content/uploads/2025/02/IMG_1087.jpg" alt="Professional portrait" />
+        <img src="https://cyclingmatters.ca/wp-content/uploads/2025/02/IMG_2684-2-2048x2048.jpeg" alt="Cycling commute at Union Station" />
+      </div>
+
+      <div class="timeline">
+
+        <div class="step reveal">
+          <h2>A wake-up call</h2>
+          <p>
+            In spring 2024, I was diagnosed with fatty liver disease and told I had high cholesterol and obesity based on BMI. Nothing like a medical report to remind you you're not invincible.
+          </p>
+        </div>
+
+        <div class="step reveal">
+          <h2>The unexpected shift to cycling</h2>
+          <p>
+            In summer 2024, I started cycling. I lost 40 lbs, my cholesterol improved, and I discovered something unexpected: riding a bike in Toronto is both the best workout and the most unpredictable commute I've ever had.
+          </p>
+        </div>
+
+        <div class="step reveal">
+          <h2>Everyday commuting reality</h2>
+          <p>
+            I don't own a car, so cycling isn't a hobby — it's transportation. Winter commuting in Toronto builds character, patience, and a strong appreciation for wind that always seems to be against you, no matter which direction you're going.
+          </p>
+        </div>
+
+        <div class="step reveal">
+          <h2>The red light incident</h2>
+          <p>
+            One Sunday morning, while stopped at a red light, I was hit by a driver. They told me I was "taking up too much room." I've since learned that cars have a unique ability to make you feel both invisible and in the way at the same time.
+          </p>
+        </div>
+
+        <div class="step reveal">
+          <h2>Why this site exists</h2>
+          <p>
+            I now ride with cameras to document what cyclists experience every day in Toronto. This site exists so people can share why cycling matters — or doesn't — and to make space for real stories from the road.
+          </p>
+        </div>
+
+        <div class="step reveal">
+          <h2>CAN-BIKE certification</h2>
+          <p>
+            I became CAN-BIKE certified, with instructor certification currently pending. I didn't do it for the certificate — I did it because Toronto traffic has a way of humbling even the most confident cyclist. The training helped me better understand positioning, awareness, and how small decisions can make a big difference when you're sharing the road with several tonnes of metal moving unpredictably fast.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll(".reveal").forEach(el => {
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+</html>
