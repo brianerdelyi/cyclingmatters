@@ -1,5 +1,13 @@
 [
   {
+    "id": "riding-toronto-public-art-after-dark",
+    "title": "Riding Toronto's Public Art After Dark",
+    "date": "October 25, 2026",
+    "excerpt": "A spring Neon Ride showed me how much of downtown Toronto is a gallery we pass through without noticing. That idea became the Toronto Public Art Map, and soon, bike routes through my favourite art.",
+    "image": "",
+    "content": "<p>Last spring, I rolled through downtown Toronto with the Neon Riders, a group of cycling enthusiasts who ride the city at night with LEDs on our bikes and music in the air. If you've never seen a Neon Ride, picture a moving constellation of light drifting through quiet streets. If you have, you know how it feels: the city looks different after dark, slower and more open.</p><p>Somewhere along that ride, it struck me how much of downtown Toronto is a gallery we pass through without noticing. From a bike, at ride pace, the city's public art stopped feeling like a set of isolated landmarks and started feeling like a route. That idea stayed with me long after the ride ended, and it became this project.</p><p>I built the list from personal experience living, riding and wandering through downtown, and I consulted public records to check what I thought I knew. The result lives on the <a href=\"https://brianerdelyi.github.io/tpam/\" target=\"_blank\">Toronto Public Art Map</a>, which shows outdoor public art, civic statuary and architectural art in downtown Toronto that can be reached on foot or by bike.</p><p>The map will always be evolving, just as the city itself is. New works appear, others move or disappear, and credits keep getting refined. Entries marked <strong>Unverified</strong> haven't yet been checked against a source. If you spot a mistake or something missing, you can <a href=\"https://github.com/brianerdelyi/tpam/issues/new?template=correction.md\" target=\"_blank\">report a correction</a>, and the data is open on <a href=\"https://github.com/brianerdelyi/tpam\" target=\"_blank\">GitHub</a>.</p><p>Next, I hope to recommend some routes through my favourite art, curated paths that are meant to be ridden. I'd love for the map to be something riders, walkers and curious locals shape together, so if you try part of it, let me know what you find.</p><p>Want to ride with us? Find the Neon Riders on <a href=\"https://www.facebook.com/groups/neonriders\" target=\"_blank\">Facebook</a>.</p>"
+  },
+  {
     "id": "theres-a-life-on-every-bike",
     "title": "There's a life on every bike",
     "date": "May 29, 2026",
